@@ -6,7 +6,7 @@ Ce projet a été développé dans une logique de portfolio IA/data science : d�
 
 ---
 
-## 🎯 Problème métier
+## Problème métier
 
 Les entreprises reçoivent des milliers de commentaires clients, parfois très variés et peu structurés. Il est difficile de les classer rapidement et de comprendre s’ils correspondent à :
 
@@ -19,7 +19,7 @@ L’objectif de ce projet est de fournir une solution automatisée pour organise
 
 ---
 
-## 🧠 Approche technique
+## Approche technique
 
 J’ai utilisé un modèle de transformer multilingue :
 
@@ -32,7 +32,7 @@ Le modèle est capable de détecter plusieurs catégories potentielles dans un m
 
 ---
 
-## 📊 Dataset
+## Dataset
 
 Le projet exploite des données de feedback utilisateur stockées dans le dossier `data/`.
 
@@ -53,7 +53,7 @@ Les labels utilisés sont :
 
 ---
 
-## ⚙️ Pipeline du projet
+## Pipeline du projet
 
 ### 1. Préparation des données
 `01_prepare_data.py`
@@ -97,7 +97,7 @@ Le projet comporte aussi des modules pour aller au-delà du simple classement :
 
 ---
 
-## 📈 Résultats obtenus
+## Résultats obtenus
 
 Les résultats ci-dessous ont été mesurés sur le jeu de test réel du projet.
 
@@ -128,7 +128,7 @@ Le score macro global de `0.86` montre une qualité de classification solide et 
 
 ---
 
-## 🏆 Ce que ce projet montre
+## Ce que ce projet montre
 
 Ce projet illustre plusieurs compétences clés en data science et IA :
 
@@ -141,7 +141,7 @@ Ce projet illustre plusieurs compétences clés en data science et IA :
 
 ---
 
-## 🚀 Réplication rapide
+## Réplication rapide
 
 ### Prérequis
 
@@ -160,7 +160,7 @@ python 04_evaluate.py
 
 ---
 
-## 📁 Structure du dépôt
+## Structure du dépôt
 
 ```text
 feedback_type/
@@ -191,7 +191,7 @@ feedback_type/
 
 ---
 
-## 📌 Conclusion
+## Conclusion
 
 Ce projet représente une application concrète de l’IA en traitement du langage naturel : automatiser la compréhension des feedback clients pour mieux les organiser, les prioriser et les exploiter.
 

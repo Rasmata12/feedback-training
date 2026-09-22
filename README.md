@@ -1,108 +1,105 @@
 # Feedback Type Classification
 
-Ce projet vise à classifier automatiquement des retours utilisateurs (feedback) en fonction de leur nature, en français, avec un modèle de classification multi-label. L’objectif est de distinguer les messages de type :
+Projet de machine learning conçu pour classifier automatiquement des retours clients en français selon leur nature : avis, réclamation, suggestion ou expérience utilisateur.
 
-- AVIS
-- RECLAMATION
-- SUGGESTION
-- EXPERIENCE
-
-Le modèle est basé sur XLM-RoBERTa, un modèle multilingue de Transformers, finetuné sur un dataset de feedback utilisateur.
+Ce projet a été développé dans une logique de portfolio IA/data science : démontrer la capacité à transformer un problème métier en pipeline de données, entraîner un modèle NLP, puis évaluer la qualité des prédictions sur un jeu de test réel.
 
 ---
 
-## Objectif du projet
+## 🎯 Problème métier
 
-Les retours clients peuvent contenir plusieurs enjeux à la fois :
-- une remarque générale sur le service,
-- une réclamation technique,
-- une demande d’évolution,
-- ou une expérience utilisateur vécue.
+Les entreprises reçoivent des milliers de commentaires clients, parfois très variés et peu structurés. Il est difficile de les classer rapidement et de comprendre s’ils correspondent à :
 
-Le système cherche à détecter automatiquement ces catégories afin d’aider à prioriser les réponses, analyser les tendances et mieux comprendre les frustrations des utilisateurs.
+- une simple opinion,
+- une réclamation,
+- une demande d’amélioration,
+- ou une expérience utilisateur positive/négative.
+
+L’objectif de ce projet est de fournir une solution automatisée pour organiser et analyser ce type de feedback afin de mieux prioriser les actions à mener.
 
 ---
 
-## Données
+## 🧠 Approche technique
 
-Les données sont stockées dans le dossier `data/`.
+J’ai utilisé un modèle de transformer multilingue :
 
-### Sources
+- XLM-RoBERTa
+- fine-tuning sur un dataset de feedback multiclasse / multi-label
+- classification binaire par label avec activation sigmoid
+- seuil de décision fixé à 0.5
 
-- `data/base_ikan.csv` : base consolidée issue des données de feedback
-- `data/apia2022/*.csv` : données d’origine du dataset APIA 2022
-- `data/train.csv`, `data/val.csv`, `data/test.csv` : splits train/validation/test
+Le modèle est capable de détecter plusieurs catégories potentielles dans un même commentaire.
 
-### Structure
+---
 
-Chaque ligne contient un texte d’utilisateur et des colonnes binaire de labels :
+## 📊 Dataset
 
-- `texte`
+Le projet exploite des données de feedback utilisateur stockées dans le dossier `data/`.
+
+Les fichiers clés sont :
+
+- `data/base_ikan.csv` : base consolidée
+- `data/train.csv` : données d’entraînement
+- `data/val.csv` : données de validation
+- `data/test.csv` : données de test
+- `data/apia2022/` : données sources
+
+Les labels utilisés sont :
+
 - `AVIS`
 - `RECLAMATION`
 - `SUGGESTION`
 - `EXPERIENCE`
 
-Les labels sont binaires (0 ou 1) et un même commentaire peut appartenir à plusieurs catégories simultanément.
-
 ---
 
-## Pipeline de traitement
+## ⚙️ Pipeline du projet
 
 ### 1. Préparation des données
 `01_prepare_data.py`
 
-- charge les fichiers CSV du dossier `data/apia2022/`
-- renomme les colonnes pour harmoniser le format
-- supprime les lignes vides et doublons
-- normalise les textes
-- sauvegarde la base consolidée dans `data/base_ikan.csv`
+- charge les fichiers CSV sources,
+- harmonise les colonnes,
+- supprime les doublons et valeurs vides,
+- nettoie les textes,
+- sauvegarde la base finale.
 
-### 2. Découpage des données
+### 2. Split train/validation/test
 `02_split_data.py`
 
-- découpe le dataset en train / validation / test
-- répartition approximative : 80% / 10% / 10%
+- répartit les données pour évaluer correctement le modèle,
+- prépare les jeux d’entraînement et de test.
 
 ### 3. Entraînement du modèle
 `03_train.py`
 
-- utilise `xlm-roberta-base`
-- configure une classification multi-label
-- entraîne pendant 4 epochs
-- sauvegarde le modèle final dans `model_feedback_type_final`
+- charge `xlm-roberta-base`,
+- configure le modèle pour la classification multi-label,
+- entraîne le modèle sur 4 epochs,
+- sauvegarde la version finale dans `model_feedback_type_final`.
 
 ### 4. Évaluation
 `04_evaluate.py`
 
-- charge le meilleur modèle
-- applique le seuil de 0.5 sur les logits sigmoid
-- affiche le rapport de classification complet
+- charge le modèle entraîné,
+- passe les données de test,
+- produit un rapport de classification complet.
 
 ### 5. Analyse avancée
-Les scripts suivants complètent le projet :
+Le projet comporte aussi des modules pour aller au-delà du simple classement :
 
 - `05_analyse_complete.py` : analyse complète du feedback
-- `06_add_feedback.py` : ajout ou enrichissement de nouvelles données
-- `08_discordance.py` : détection de discordance entre sentiment et type détecté
-- `09_criticite.py` : calcul de criticité / signal de risque
-- `10_analyse_finale.py` : synthèse de l’analyse finale
-- `13_dedupe.py` : déduplication des entrées
+- `06_add_feedback.py` : ajout de nouvelles observations
+- `08_discordance.py` : détection de discordance entre sentiment et type
+- `09_criticite.py` : calcul de criticité
+- `10_analyse_finale.py` : synthèse finale
+- `13_dedupe.py` : suppression des doublons
 
 ---
 
-## Modèle utilisé
+## 📈 Résultats obtenus
 
-- Architecture : `XLM-RoBERTa` (`xlm-roberta-base`)
-- Type de tâche : classification multi-label
-- Seuil d’activation : 0.5
-- Fonction de sortie : sigmoid appliquée sur les logits
-
----
-
-## Résultats obtenus
-
-L’évaluation a été réalisée sur le jeu de test. Voici les résultats réels obtenus :
+Les résultats ci-dessous ont été mesurés sur le jeu de test réel du projet.
 
 | Label | Precision | Recall | F1-score | Support |
 |---|---:|---:|---:|---:|
@@ -120,22 +117,33 @@ L’évaluation a été réalisée sur le jeu de test. Voici les résultats rée
 | Weighted avg | 0.87 |
 | Samples avg | 0.88 |
 
-### Interprétation
+### Analyse des performances
 
-- La catégorie `RECLAMATION` est la mieux détectée avec un F1-score de `0.92`.
-- `AVIS` est très stable avec un F1-score de `0.88`.
-- `SUGGESTION` est correcte avec `0.87`.
-- `EXPERIENCE` est plus difficile à classifier, avec `0.78`, probablement à cause d’un contexte plus subjectif et variable.
+- `RECLAMATION` est la catégorie la mieux détectée, avec un F1-score de `0.92`.
+- `AVIS` est également très solide avec un F1-score de `0.88`.
+- `SUGGESTION` reste bien performante à `0.87`.
+- `EXPERIENCE` est la catégorie la plus difficile, avec `0.78`, probablement en raison du caractère plus subjectif et varié des commentaires.
 
-Le score global moyen macro est de `0.86`, ce qui indique une bonne qualité de classification sur les 4 catégories.
+Le score macro global de `0.86` montre une qualité de classification solide et exploitable pour un projet de type NLP appliqué.
 
 ---
 
-## Réplication rapide
+## 🏆 Ce que ce projet montre
+
+Ce projet illustre plusieurs compétences clés en data science et IA :
+
+- préparation et nettoyage de données textuelles,
+- transformation d’un besoin métier en problème ML,
+- utilisation de modèles de langage avancés,
+- fine-tuning d’un modèle de NLP,
+- évaluation rigoureuse avec des métriques de classification,
+- structuration d’un workflow de projet reproductible.
+
+---
+
+## 🚀 Réplication rapide
 
 ### Prérequis
-
-Python 3.11 et les dépendances suivantes :
 
 ```bash
 pip install torch transformers pandas scikit-learn sentencepiece
@@ -152,7 +160,7 @@ python 04_evaluate.py
 
 ---
 
-## Structure du dépôt
+## 📁 Structure du dépôt
 
 ```text
 feedback_type/
@@ -179,16 +187,18 @@ feedback_type/
 └── ...
 ```
 
-> Les dossiers de modèles sont ignorés dans le dépôt Git pour ne pas uploader les poids de gros modèles. Il faut relancer l’entraînement pour reconstruire le modèle localement.
+> Les poids du modèle ne sont pas inclus dans le dépôt Git pour garder le projet léger. Il suffit de relancer l’entraînement pour reconstruire le modèle localement.
 
 ---
 
-## Conclusion
+## 📌 Conclusion
 
-Ce projet montre qu’un modèle de type XLM-RoBERTa peut bien identifier les principales catégories de feedback utilisateur en français, avec un bon niveau de performance global. Il constitue une base solide pour des analyses plus avancées comme la priorisation des réclamations, l’analyse de sentiment, ou la détection des signaux de risque.
+Ce projet représente une application concrète de l’IA en traitement du langage naturel : automatiser la compréhension des feedback clients pour mieux les organiser, les prioriser et les exploiter.
+
+C’est une base solide pour des extensions comme la détection de sentiment, l’analyse de risque, la priorisation des réclamations ou l’intégration dans un outil d’exploitation client.
 
 ---
 
 ## Licence
 
-À compléter selon le besoin du projet ou de l’utilisateur.
+Projet personnel / portfolio. À adapter selon le contexte d’utilisation.

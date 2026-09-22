@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+venv/
+.venv/
+.env
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Model checkpoints / weights / trainer artifacts
+model_feedback_type/
+model_feedback_type_final/
+*.safetensors
+*.pt
+*.pth
+*.bin
+*.ckpt
+
+# Optional local caches
+.cache/
+.pytest_cache/
